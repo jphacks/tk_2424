@@ -8,8 +8,6 @@ services:
       - "8080:8080"
     volumes:
       - .:/app
-    environment:
-      FLASK_ENV: development
     env_file:
       - .env
     command:
@@ -22,10 +20,14 @@ services:
     ports:
       - "3306:3306"
     environment:
+      MYSQL_DATABASE: GOMINGO
       MYSQL_USER: user
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: root
     restart: always
     volumes:
       - ./config/my.cnf:/etc/mysql/conf.d/my.cnf
+      - mysql_data:/var/lib/mysql
 
+volumes:
+  mysql_data:
