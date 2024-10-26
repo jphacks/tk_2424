@@ -203,5 +203,5 @@ if __name__ == "__main__":
     plot_accuracies(history)
     plot_losses(history)
 
-    model_path = os.path.join(os.path.dirname(__file__), "../output/model.pth")
+    model_path = os.path.join(os.path.dirname(__file__), "./output/model.pth")
     save_model(model, model_path)
