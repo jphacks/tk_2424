@@ -85,3 +85,78 @@ def insert_garbage_can(longitude: float, latitude: float, note: str = ""):
     conn.commit()
 
 
+def delete_garbage_can(garbage_can_id: int):
+    cursor.execute(
+        """
+        DELETE FROM garbage_cans
+        WHERE garbage_can_id = %s
+        """,
+        (garbage_can_id,),
+    )
+    conn.commit()
+
+
+def insert_character(user_id: int, character_no: int):
+    cursor.execute(
+        """
+        INSERT INTO characters (user_id, character_no)
+        VALUES (%s, %s)
+        """,
+        (user_id, character_no),
+    )
+    conn.commit()
+
+
+def delete_character(character_id: int):
+    cursor.execute(
+        """
+        DELETE FROM characters
+        WHERE character_id = %s
+        """,
+        (character_id,),
+    )
+    conn.commit()
+
+
+def insert_user(user_name: str, user_email: str, password: str):
+    cursor.execute(
+        """
+        INSERT INTO users (user_name, user_email, password)
+        VALUES (%s, %s, %s)
+        """,
+        (user_name, user_email, password),
+    )
+    conn.commit()
+
+
+def delete_user(user_id: int):
+    cursor.execute(
+        """
+        DELETE FROM users
+        WHERE user_id = %s
+        """,
+        (user_id,),
+    )
+    conn.commit()
+
+
+def insert_garbage(user_id: int, latitude: float, longitude: float):
+    cursor.execute(
+        """
+        INSERT INTO garbages (user_id, latitude, longitude)
+        VALUES (%s, %s, %s)
+        """,
+        (user_id, latitude, longitude),
+    )
+    conn.commit()
+
+
+def delete_garbage(garbage_id: int):
+    cursor.execute(
+        """
+        DELETE FROM garbages
+        WHERE garbage_id = %s
+        """,
+        (garbage_id,),
+    )
+    conn.commit()
