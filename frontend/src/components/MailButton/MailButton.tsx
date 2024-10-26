@@ -12,7 +12,7 @@ const styles = StyleSheet.create({
   button: {
     width: 40,
     height: 40,
-    backgroundColor: colors.green,
+    backgroundColor: colors.turquoise,
     borderRadius: 50,
   },
   icon: {
