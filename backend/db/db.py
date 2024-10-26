@@ -1,12 +1,24 @@
+import json
+import time
 import mysql.connector
-from dotenv import load_dotenv
-import os
 
-load_dotenv()
 
-conn = mysql.connector.connect(
-    host="localhost", user="root", password=os.environ.get("MYSQL_ROOT_PASSWORD")
-)
+# Retry connection to the database
+def connect_to_db(retries=5, delay=5):
+    for i in range(retries):
+        try:
+            conn = mysql.connector.connect(
+                host="gomingo-mysql", user="user", password="password"
+            )
+            return conn
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
+            print(f"Retrying in {delay} seconds...")
+            time.sleep(delay)
+    raise Exception("Failed to connect to the database after several retries")
+
+
+conn = connect_to_db()
 
 cursor = conn.cursor()
 
@@ -75,7 +87,7 @@ def init_db():
 init_db()
 
 
-def insert_garbage_can(longitude: float, latitude: float, note: str = ""):
+def insert_garbage_can(longitude: float, latitude: float, note: str = "") -> bool:
     cursor.execute(
         """
         INSERT INTO garbage_cans (longitude, latitude, note)
@@ -97,13 +109,17 @@ def delete_garbage_can(garbage_can_id: int):
     conn.commit()
 
 
-def get_garbage_can():
+def get_garbage_cans():
     cursor.execute(
         """
         SELECT * FROM garbage_cans
         """
     )
-    return cursor.fetchall()
+    garbage_cans = cursor.fetchall()
+    columns = [desc[0] for desc in cursor.description]
+    result = [dict(zip(columns, row)) for row in garbage_cans]
+    return json.dumps(result, default=str)
+
 
 def insert_character(user_id: int, character_no: int):
     cursor.execute(
@@ -125,6 +141,18 @@ def delete_character(character_id: int):
         (character_id,),
     )
     conn.commit()
+
+
+def get_characters():
+    cursor.execute(
+        """
+        SELECT * FROM characters
+        """
+    )
+    characters = cursor.fetchall()
+    columns = [desc[0] for desc in cursor.description]
+    result = [dict(zip(columns, row)) for row in characters]
+    return json.dumps(result, default=str)
 
 
 def insert_user(user_name: str, user_email: str, password: str):
@@ -171,12 +199,15 @@ def delete_garbage(garbage_id: int):
     conn.commit()
 
 
+def get_garbages():
+    cursor.execute(
+        "SELECT * FROM garbages"
+    )
+    garbages = cursor.fetchall()
+    columns = [desc[0] for desc in cursor.description]
+    result = [dict(zip(columns, row)) for row in garbages]
+    return json.dumps(result, default=str)
+
 def delete_table(table_name: str):
     cursor.execute(f"DROP TABLE {table_name}")
     conn.commit()
-
-
-import pandas as pd
-df = pd.read_csv("./ゴミ箱位置.csv")
-
-print(df)
