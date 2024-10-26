@@ -28,6 +28,7 @@
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",
     "@reduxjs/toolkit": "^2.2.3",
+    "axios": "^1.7.7",
     "babel-plugin-module-resolver": "^5.0.2",
     "expo": "~51.0.38",
     "expo-asset": "~10.0.6",
@@ -53,7 +54,8 @@
     "react-native-vision-camera": "^4.5.3",
     "react-native-web": "~0.19.11",
     "react-redux": "^9.1.2",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "swr": "^2.2.5"
   },
   "devDependencies": {
     "@babel/core": "^7.24.5",
