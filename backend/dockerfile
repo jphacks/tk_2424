@@ -4,6 +4,9 @@ FROM python:3.10
 # 作業ディレクトリを設定
 WORKDIR /app
 
+# mysql
+RUN apt-get update && apt-get install -y default-mysql-client && rm -rf /var/cache/apk/*
+
 # Poetryをインストール
 RUN curl -sSL https://install.python-poetry.org | python3 - && \
     echo "export PATH=/root/.local/bin:$PATH" >> ~/.bashrc && \
@@ -23,7 +26,9 @@ RUN poetry install
 COPY . .
 
 # ポートを公開
-EXPOSE 5000
+EXPOSE 8080
+
+EXPOSE 3306
 
 # Flaskアプリを起動
-CMD ["poetry", "run", "flask", "run", "--host=0.0.0.0"]
+CMD ["poetry", "run", "flask", "run", "--host=0.0.0.0", "--port=8080"]
