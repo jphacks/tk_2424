@@ -10,8 +10,6 @@ python = "^3.10"
 flask = "^2.3"
 python-dotenv = "^1.0.1"
 mysql-connector-python = "^9.1.0"
-torch = "^2.5.0"
-torchvision = "^0.20.0"
 matplotlib = "^3.9.2"
 
 [build-system]

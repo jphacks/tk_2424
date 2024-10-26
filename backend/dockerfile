@@ -27,11 +27,3 @@ RUN poetry install
 
 # Flaskアプリケーションのコードをコピー
 COPY . .
-
-# ポートを公開
-EXPOSE 8080
-
-EXPOSE 3306
-
-# Flaskアプリを起動
-CMD ["poetry", "run", "flask", "run", "--host=0.0.0.0", "--port=8080"]

@@ -1,12 +1,7 @@
 import mysql.connector
-from dotenv import load_dotenv
-import os
 
-load_dotenv()
 
-conn = mysql.connector.connect(
-    host="localhost", user="root", password=os.environ.get("MYSQL_ROOT_PASSWORD")
-)
+conn = mysql.connector.connect(host="localhost", user="root", password="password")
 
 cursor = conn.cursor()
 
@@ -105,6 +100,7 @@ def get_garbage_can():
     )
     return cursor.fetchall()
 
+
 def insert_character(user_id: int, character_no: int):
     cursor.execute(
         """
@@ -177,6 +173,7 @@ def delete_table(table_name: str):
 
 
 import pandas as pd
+
 df = pd.read_csv("./ゴミ箱位置.csv")
 
 print(df)
