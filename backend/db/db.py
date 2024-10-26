@@ -63,6 +63,7 @@ def init_db():
             user_id INT NOT NULL,
             latitude FLOAT NOT NULL,
             longitude FLOAT NOT NULL,
+            is_discarded BOOLEAN DEFAULT FALSE,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             deleted_at TIMESTAMP DEFAULT NULL
@@ -95,6 +96,14 @@ def delete_garbage_can(garbage_can_id: int):
     )
     conn.commit()
 
+
+def get_garbage_can():
+    cursor.execute(
+        """
+        SELECT * FROM garbage_cans
+        """
+    )
+    return cursor.fetchall()
 
 def insert_character(user_id: int, character_no: int):
     cursor.execute(
@@ -160,3 +169,14 @@ def delete_garbage(garbage_id: int):
         (garbage_id,),
     )
     conn.commit()
+
+
+def delete_table(table_name: str):
+    cursor.execute(f"DROP TABLE {table_name}")
+    conn.commit()
+
+
+import pandas as pd
+df = pd.read_csv("./ゴミ箱位置.csv")
+
+print(df)
