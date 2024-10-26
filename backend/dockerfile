@@ -6,16 +6,18 @@ WORKDIR /app
 
 # Poetryをインストール
 RUN curl -sSL https://install.python-poetry.org | python3 - && \
+    echo "export PATH=/root/.local/bin:$PATH" >> ~/.bashrc && \
     export PATH="/root/.local/bin:$PATH"
 
 # Poetryの環境変数設定（仮想環境の設定を無効化）
 ENV POETRY_VIRTUALENVS_CREATE=false
+ENV PATH="/root/.local/bin:$PATH"
 
 # 必要なファイルをコピー
 COPY pyproject.toml poetry.lock ./
 
 # Poetryで依存関係をインストール
-RUN /root/.local/bin/poetry install
+RUN poetry install
 
 # Flaskアプリケーションのコードをコピー
 COPY . .

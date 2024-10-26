@@ -1,11 +1,13 @@
-version: '3.8'
-
 services:
-  flask_app:
+  app:
     build: .
+    tty: true
+    user: root
     ports:
       - "5000:5000"
     volumes:
       - .:/app
     environment:
       FLASK_ENV: development
+    env_file:
+      - .env
