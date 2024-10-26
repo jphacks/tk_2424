@@ -51,7 +51,20 @@ def garbages():
     if request.method == "GET":
         return db.get_garbages()
     elif request.method == "POST":
-        pass
+        if not request.is_json:
+            return jsonify({"error": "Request must be JSON"}), 400
+        data = request.get_json()
+        if "user_id" not in data or "longitude" not in data or "latitude" not in data:
+            return (
+                jsonify({"error": "JSON must have user_id, longitude and latitude keys"}),
+                400,
+            )
+        user_id, longitude, latitude = data["user_id"], data["longitude"], data["latitude"]
+        if not isinstance(user_id, int) or not isinstance(longitude, float) or not isinstance(latitude, float):
+            return jsonify({"error": "user_id must be integer, longitude and latitude must be floats"}), 400
+        db.insert_garbage(data["user_id"], data["longitude"], data["latitude"])
+        return jsonify({"message": "Garbage inserted successfully"}), 201
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080, debug=True)
