@@ -1,11 +1,107 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, redirect, url_for
 import db.db as db
+from dotenv import load_dotenv
+import os
+from oauthlib.oauth2 import WebApplicationClient
+import requests
+
+load_dotenv()
+
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 app = Flask(__name__)
+
+GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
+GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
+GOOGLE_REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
+
+GOOGLE_DISCOVERY_URL = "https://accounts.google.com/.well-known/openid-configuration"
+
+
+# OAuth2 client setup
+client = WebApplicationClient(GOOGLE_CLIENT_ID)
+
+
+def get_google_provider_cfg():
+    return requests.get(GOOGLE_DISCOVERY_URL).json()
 
 
 @app.route("/")
 def hello():
+    return jsonify({"message": "Hello, Flask!"})
+
+
+@app.route("/login")
+def login():
+    # Discover Google's authorization endpoint
+    google_provider_cfg = get_google_provider_cfg()
+    authorization_endpoint = google_provider_cfg["authorization_endpoint"]
+
+    # Prepare the request URI
+    request_uri = client.prepare_request_uri(
+        authorization_endpoint,
+        redirect_uri=GOOGLE_REDIRECT_URI,
+        scope=[
+            "openid",
+            "email",
+            "profile",
+            "https://www.googleapis.com/auth/calendar.readonly",
+            "https://www.googleapis.com/auth/spreadsheets.readonly",
+            "https://www.googleapis.com/auth/documents.readonly",
+            "https://www.googleapis.com/auth/presentations.readonly",
+        ],
+    )
+    return redirect(request_uri)
+
+
+@app.route("/google/callback")
+def google_auth_callback():
+    # 認証コードを取得
+    code = request.args.get("code")
+
+    # Googleプロバイダの設定を取得
+    google_provider_cfg = get_google_provider_cfg()
+    token_endpoint = google_provider_cfg["token_endpoint"]
+
+    # トークンリクエストを準備して送信
+    token_url, headers, body = client.prepare_token_request(
+        token_endpoint,
+        authorization_response=request.url,
+        redirect_url=GOOGLE_REDIRECT_URI,
+        code=code,
+    )
+    token_response = requests.post(
+        token_url,
+        headers=headers,
+        data=body,
+        auth=(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET),
+    )
+
+    # レスポンスのステータスコードを確認
+    if token_response.status_code != 200:
+        return "Error: Failed to fetch access token", 400
+
+    # トークンレスポンスをJSONとして取得
+    tokens = token_response.json()
+    access_token = tokens.get("access_token")
+    if not access_token:
+        return "Error: Access token not found", 400
+
+    # ユーザー情報を取得
+    userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
+    headers = {"Authorization": f"Bearer {access_token}"}
+    userinfo_response = requests.get(userinfo_endpoint, headers=headers)
+
+    if userinfo_response.status_code != 200:
+        return "Error: Failed to fetch user information", 400
+
+    # ユーザー情報を返す
+    user_info = userinfo_response.json()
+    return jsonify(user_info)
+
+
+@app.route("/")
+def root():
     return jsonify({"message": "Hello, Flask!"})
 
 
@@ -56,12 +152,29 @@ def garbages():
         data = request.get_json()
         if "user_id" not in data or "longitude" not in data or "latitude" not in data:
             return (
-                jsonify({"error": "JSON must have user_id, longitude and latitude keys"}),
+                jsonify(
+                    {"error": "JSON must have user_id, longitude and latitude keys"}
+                ),
                 400,
             )
-        user_id, longitude, latitude = data["user_id"], data["longitude"], data["latitude"]
-        if not isinstance(user_id, int) or not isinstance(longitude, float) or not isinstance(latitude, float):
-            return jsonify({"error": "user_id must be integer, longitude and latitude must be floats"}), 400
+        user_id, longitude, latitude = (
+            data["user_id"],
+            data["longitude"],
+            data["latitude"],
+        )
+        if (
+            not isinstance(user_id, int)
+            or not isinstance(longitude, float)
+            or not isinstance(latitude, float)
+        ):
+            return (
+                jsonify(
+                    {
+                        "error": "user_id must be integer, longitude and latitude must be floats"
+                    }
+                ),
+                400,
+            )
         db.insert_garbage(data["user_id"], data["longitude"], data["latitude"])
         return jsonify({"message": "Garbage inserted successfully"}), 201
 
