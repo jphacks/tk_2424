@@ -8,8 +8,20 @@ from torchvision.models import ResNet50_Weights
 
 
 model_path = os.path.join(os.path.dirname(__file__), "./output/model.pth")
-data_dir = os.path.join(os.path.dirname(__file__), "./input/")
-classes_list = os.listdir(data_dir)  # クラスリストをディレクトリ名から取
+classes_list = [
+    "battery",
+    "biological",
+    "cardboard",
+    "clothes",
+    "glass",
+    "metal",
+    "not-garbage",
+    "paper",
+    "plastic",
+    "plasticbottle",
+    "shoes",
+    "trash",
+]
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
