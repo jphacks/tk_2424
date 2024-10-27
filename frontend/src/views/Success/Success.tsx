@@ -21,12 +21,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const dice = (n: number) => {
-  return Math.floor(Math.random() * n) + 1;
-};
+// const dice = (n: number) => {
+//   return Math.floor(Math.random() * n) + 1;
+// };
 
 export default function Friend({ navigation }: StackProps) {
-  const randomCharacter = characters[dice(5)];
+  const randomCharacter = characters[1];
   const [character, setCharacter] = useState<CharacterType | null>(randomCharacter);
 
   const returnToMap = () => {
