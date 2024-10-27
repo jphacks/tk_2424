@@ -4,9 +4,11 @@ import { axiosInstance } from 'src/libs/axios';
 import useSWR from 'swr';
 
 export type GarbageType = {
-  garbage_id: string;
+  garbage_id: number;
   user_id: number;
   longitude: number;
+  latitude: number;
+  is_discarded: boolean;
   created_at: string;
   updated_at: string;
   deleted_at: string | null;
