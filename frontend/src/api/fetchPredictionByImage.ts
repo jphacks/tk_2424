@@ -19,7 +19,7 @@ export const postBinaryImage = async (imageUri: string) => {
     blob,
     {
       headers: {
-        'Content-Type': blob.type,
+        'Content-Type': 'application/octet-stream',
       },
     },
   );
