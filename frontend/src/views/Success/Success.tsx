@@ -7,13 +7,18 @@ import { useState } from 'react';
 const imageSize = 300;
 
 const styles = StyleSheet.create({
-  root: { flex: 1, margin: 40 },
+  root: { flex: 1, margin: 20 },
   image: {
     margin: 'auto',
     width: imageSize,
     height: imageSize,
   },
   text: { margin: 'auto', fontSize: 18 },
+  bg: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+  },
 });
 
 // const dice = (n: number) => {
@@ -32,14 +37,12 @@ export default function Friend({ navigation }: StackProps) {
   return (
     <View style={styles.root}>
       <StatusBar barStyle="light-content" />
-      <Text style={styles.text}>{character?.name}が一緒に来たがっている！</Text>
-      <Image source={character?.image} style={styles.image} />
-      <Text style={styles.text}>
-        見つけたゴミをゴミ箱に捨てて
-        {'\n'}
-        {character?.name}を焚き火に呼ぼう！
-      </Text>
-      <Button title="Mapに戻る" onPress={returnToMap} />
+      <Image source={require('assets/images/success.png')} style={styles.bg} />
+      <View style={{ width: '100%', height: '100%' }}>
+        <Text style={styles.text}>{character?.name}が焚き火に参加した！</Text>
+        <Image source={character?.image} style={styles.image} />
+        <Button title="Mapに戻る" onPress={returnToMap} />
+      </View>
     </View>
   );
 }

@@ -2,9 +2,9 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StackParamList } from './Stack.typeDefs';
 import { DrawerProps } from '../drawer/Drawer.typeDefs';
-import { StackHeaderLeft, StackHeaderTitle } from './components';
+import { StackHeaderTitle } from './components';
 import { colors } from '@theme';
-// import MailButton from '@components/MailButton';
+import MailButton from '@components/MailButton';
 
 // views
 import Map from '@views/Map';
@@ -12,6 +12,7 @@ import Bonfire from '@views/Bonfire';
 import Book from '@views/Book';
 import Camera from '@views/Camera';
 import Friend from '@views/Friend';
+import Success from '@views/Success';
 
 const Stack = createNativeStackNavigator<StackParamList>();
 
@@ -30,8 +31,7 @@ export function MapStackNavigator({ navigation }: DrawerProps) {
         options={{
           title: 'Map',
           headerTitle: () => <StackHeaderTitle />,
-          headerLeft: () => <StackHeaderLeft onPress={() => navigation.toggleDrawer()} />,
-          // headerRight: () => <MailButton unread />,
+          headerRight: () => <MailButton unread />,
           headerTitleAlign: 'center',
         }}
       />
@@ -41,6 +41,7 @@ export function MapStackNavigator({ navigation }: DrawerProps) {
         options={{
           title: 'Camera',
           headerTitle: () => <StackHeaderTitle />,
+          headerRight: () => <MailButton unread />,
         }}
       />
       <Stack.Screen
@@ -50,6 +51,17 @@ export function MapStackNavigator({ navigation }: DrawerProps) {
           title: 'Camera',
           headerTitle: () => <StackHeaderTitle />,
           headerLeft: () => <></>,
+          headerRight: () => <MailButton unread />,
+        }}
+      />
+      <Stack.Screen
+        component={Success}
+        name="SuccessStack"
+        options={{
+          title: 'Success',
+          headerTitle: () => <StackHeaderTitle />,
+          headerLeft: () => <></>,
+          headerRight: () => <MailButton unread />,
         }}
       />
     </Stack.Navigator>
@@ -65,7 +77,7 @@ export function BonfireStackNavigator({ navigation }: DrawerProps) {
         options={{
           title: 'Bonfire',
           headerTitle: () => <StackHeaderTitle />,
-          headerLeft: () => <StackHeaderLeft onPress={() => navigation.toggleDrawer()} />,
+          headerRight: () => <MailButton unread />,
           headerTitleAlign: 'center',
         }}
       />
@@ -82,7 +94,7 @@ export function BookStackNavigator({ navigation }: DrawerProps) {
         options={{
           title: 'Book',
           headerTitle: () => <StackHeaderTitle />,
-          headerLeft: () => <StackHeaderLeft onPress={() => navigation.toggleDrawer()} />,
+          headerRight: () => <MailButton unread />,
           headerTitleAlign: 'center',
         }}
       />
