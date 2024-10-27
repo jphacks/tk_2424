@@ -5,7 +5,7 @@ import mysql.connector
 
 # Retry connection to the database
 def connect_to_db(retries=5, delay=5):
-    for i in range(retries):
+    for _ in range(retries):
         try:
             conn = mysql.connector.connect(
                 host="gomingo-mysql", user="user", password="password"
@@ -200,13 +200,12 @@ def delete_garbage(garbage_id: int):
 
 
 def get_garbages():
-    cursor.execute(
-        "SELECT * FROM garbages"
-    )
+    cursor.execute("SELECT * FROM garbages")
     garbages = cursor.fetchall()
     columns = [desc[0] for desc in cursor.description]
     result = [dict(zip(columns, row)) for row in garbages]
     return json.dumps(result, default=str)
+
 
 def delete_table(table_name: str):
     cursor.execute(f"DROP TABLE {table_name}")
