@@ -1,5 +1,9 @@
 from flask import Flask, jsonify, request, redirect, url_for
 import db.db as db
+import model.test as test
+from PIL import Image
+import numpy as np
+import cv2
 from dotenv import load_dotenv
 import os
 from oauthlib.oauth2 import WebApplicationClient
@@ -152,9 +156,7 @@ def garbages():
         data = request.get_json()
         if "user_id" not in data or "longitude" not in data or "latitude" not in data:
             return (
-                jsonify(
-                    {"error": "JSON must have user_id, longitude and latitude keys"}
-                ),
+                jsonify({"error": "JSON must have user_id, longitude and latitude keys"}),
                 400,
             )
         user_id, longitude, latitude = (
@@ -162,21 +164,41 @@ def garbages():
             data["longitude"],
             data["latitude"],
         )
-        if (
-            not isinstance(user_id, int)
-            or not isinstance(longitude, float)
-            or not isinstance(latitude, float)
-        ):
+        if not isinstance(user_id, int) or not isinstance(longitude, float) or not isinstance(latitude, float):
             return (
-                jsonify(
-                    {
-                        "error": "user_id must be integer, longitude and latitude must be floats"
-                    }
-                ),
+                jsonify({"error": "user_id must be integer, longitude and latitude must be floats"}),
+                400,
+            )
+        user_id, longitude, latitude = (
+            data["user_id"],
+            data["longitude"],
+            data["latitude"],
+        )
+        if not isinstance(user_id, int) or not isinstance(longitude, float) or not isinstance(latitude, float):
+            return (
+                jsonify({"error": "user_id must be integer, longitude and latitude must be floats"}),
                 400,
             )
         db.insert_garbage(data["user_id"], data["longitude"], data["latitude"])
         return jsonify({"message": "Garbage inserted successfully"}), 201
+
+
+@app.route("/predict", methods=["POST"])
+def predict():
+    try:
+        if not request.data:
+            return jsonify({"error": "Request must be an image"}), 400
+        np_img = np.frombuffer(request.data, np.uint8)
+        img = cv2.imdecode(np_img, cv2.IMREAD_COLOR)
+        if img is None:
+            return jsonify({"error": "Invalid image"}), 400
+        img_pil = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+        model = test.load_model(test.model_path, num_classes=12, device=test.device)
+        predict_class = test.predict_image(img_pil, model, test.classes_list, test.device)
+        is_garbage = predict_class != "non-garbage"
+        return jsonify({"is_garbage": is_garbage, "class": predict_class}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":

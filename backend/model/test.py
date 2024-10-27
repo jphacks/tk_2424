@@ -3,9 +3,14 @@ import os
 import torch
 import torch.nn as nn
 import torchvision.models as models
-from PIL import Image
 from torchvision import transforms
 from torchvision.models import ResNet50_Weights
+
+
+model_path = os.path.join(os.path.dirname(__file__), "./output/model.pth")
+data_dir = os.path.join(os.path.dirname(__file__), "./input/")
+classes_list = os.listdir(data_dir)  # クラスリストをディレクトリ名から取
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
 # ResNetモデルの定義
@@ -30,7 +35,7 @@ def load_model(model_path, num_classes, device):
 
 
 # 画像を分類する関数
-def predict_image(img_path, model, classes, device):
+def predict_image(img_pil, model, classes, device):
     # 画像の前処理
     transformations = transforms.Compose(
         [
@@ -39,8 +44,8 @@ def predict_image(img_path, model, classes, device):
         ]
     )
 
-    img = Image.open(img_path).convert("RGB")
-    img_tensor = transformations(img).unsqueeze(0).to(device)
+    # img = Image.open(img_path).convert("RGB")
+    img_tensor = transformations(img_pil).unsqueeze(0).to(device)
 
     model.eval()
     with torch.no_grad():
@@ -51,15 +56,8 @@ def predict_image(img_path, model, classes, device):
 
 
 if __name__ == "__main__":
-    # モデルのパス、デバイス設定、クラスリスト定義
-    model_path = os.path.join(os.path.dirname(__file__), "./output/model.pth")
-    data_dir = os.path.join(os.path.dirname(__file__), "./input/")
-    classes_list = os.listdir(data_dir)  # クラスリストをディレクトリ名から取
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-    model = load_model(model_path, num_classes=12, device=device)
-
     # 予測する画像のパス
+    model = load_model(model_path, num_classes=12, device=device)
     img_path = "test.jpg"
 
     predicted_class = predict_image(img_path, model, classes_list, device)
