@@ -7,7 +7,7 @@ import { useState } from 'react';
 const imageSize = 300;
 
 const styles = StyleSheet.create({
-  root: { flex: 1 },
+  root: { flex: 1, margin: 40 },
   image: {
     margin: 'auto',
     width: imageSize,
@@ -16,12 +16,12 @@ const styles = StyleSheet.create({
   text: { margin: 'auto', fontSize: 18 },
 });
 
-const dice = (n: number) => {
-  return Math.floor(Math.random() * n) + 1;
-};
+// const dice = (n: number) => {
+//   return Math.floor(Math.random() * n) + 1;
+// };
 
 export default function Friend({ navigation }: StackProps) {
-  const randomCharacter = characters[dice(6)];
+  const randomCharacter = characters[1];
   const [character, setCharacter] = useState<CharacterType | null>(randomCharacter);
 
   const returnToMap = () => {
