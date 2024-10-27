@@ -64,6 +64,8 @@
 - Flask
 - OpenCV
 - React Native
+- MySQL
+- Docker
 
 ### 独自技術
 
