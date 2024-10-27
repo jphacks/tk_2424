@@ -1,5 +1,10 @@
 from flask import Flask, jsonify, request
 import db.db as db
+import model.test as test
+from PIL import Image
+import numpy as np
+
+import cv2
 
 app = Flask(__name__)
 
@@ -64,6 +69,23 @@ def garbages():
             return jsonify({"error": "user_id must be integer, longitude and latitude must be floats"}), 400
         db.insert_garbage(data["user_id"], data["longitude"], data["latitude"])
         return jsonify({"message": "Garbage inserted successfully"}), 201
+
+
+@app.route("/predict", methods=["POST"])
+def predict():
+    try:
+        if not request.data:
+            return jsonify({"error": "Request must be an image"}), 400
+        np_img = np.frombuffer(request.data, np.uint8)
+        img = cv2.imdecode(np_img, cv2.IMREAD_COLOR)
+        if img is None:
+            return jsonify({"error": "Invalid image"}), 400
+        img_pil = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+        model = test.load_model(test.model_path, num_classes=12, device=test.device)
+        predict_class = test.predict_image(img_pil, model, test.classes_list, test.device)
+        return jsonify({"class": predict_class}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 if __name__ == "__main__":
