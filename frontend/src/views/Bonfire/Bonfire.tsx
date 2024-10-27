@@ -2,7 +2,6 @@ import React from 'react';
 import { View, StyleSheet, StatusBar } from 'react-native';
 import { Image } from 'expo-image';
 import { StackProps } from '@navigator/stack';
-import LevelBar from '@components/StatusBar';
 
 const levelBarSize = 150;
 const bonfireSize = 200;
@@ -15,6 +14,7 @@ const styles = StyleSheet.create({
   LevelBar: {
     position: 'absolute',
     width: levelBarSize,
+    height: levelBarSize,
     top: '50%',
     left: '50%',
     transform: [{ translateX: -levelBarSize / 2 }, { translateY: -levelBarSize / 2 }],
@@ -54,7 +54,6 @@ export default function Bonfire({ navigation }: StackProps) {
   return (
     <View style={styles.root}>
       <StatusBar barStyle="light-content" />
-      <LevelBar progress={0.5} style={styles.LevelBar} />
       <Image source={require('assets/images/background.png')} style={styles.bg} />
       <Image source={require('assets/images/bonfire/カンミナ.gif')} style={styles.rightGif} />
       <Image source={require('assets/images/bonfire/ダンビー.gif')} style={styles.leftGif} />

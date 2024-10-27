@@ -3,12 +3,14 @@ import React, { useRef, useState } from 'react';
 import { CameraCapturedPicture, CameraView, useCameraPermissions } from 'expo-camera';
 import { Button, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { StackProps } from '@navigator';
+// import { trush } from '@assets/data/trush';
 
-export default function Camera({ navigation }: StackProps) {
+export default function Camera({ navigation, route }: StackProps) {
   const [permission, requestPermission] = useCameraPermissions();
   const camera = useRef<CameraView>(null);
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+  // const { latitude, longitude } = route.params;
 
   if (!permission) {
     return <View />;
@@ -40,6 +42,7 @@ export default function Camera({ navigation }: StackProps) {
     console.log('Photo sent:', photoUri);
     setModalVisible(false);
     setPhotoUri(null);
+    // trush.push({ latitude: region?.latitude, longitude: region?.longitude, isDiscarded: false });
     // 写真を送信するロジックをここに追加
     navigation.navigate('FriendStack');
   }
