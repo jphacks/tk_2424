@@ -83,7 +83,8 @@ def predict():
         img_pil = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
         model = test.load_model(test.model_path, num_classes=12, device=test.device)
         predict_class = test.predict_image(img_pil, model, test.classes_list, test.device)
-        return jsonify({"class": predict_class}), 200
+        is_garbage = predict_class != "non-garbage"
+        return jsonify({"is_garbage": is_garbage, "class": predict_class}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
