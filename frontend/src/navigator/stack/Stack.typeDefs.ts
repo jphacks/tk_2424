@@ -6,6 +6,7 @@ export type StackParamList = {
   BookStack: undefined;
   CameraStack: undefined;
   FriendStack: undefined;
+  SuccessStack: undefined;
   // add more screen props...
 };
 

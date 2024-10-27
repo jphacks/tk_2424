@@ -5,6 +5,8 @@ import { colors } from '@theme';
 import { TabParamList } from './Tab.typeDefs';
 import { MapStackNavigator, BonfireStackNavigator, BookStackNavigator } from '../stack/Stack';
 import { View } from 'react-native';
+import { StackProps } from '@navigator/stack';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator<TabParamList>();
 
@@ -37,7 +39,7 @@ const renderTabBarIcon =
       </View>
     );
   };
-export default function TabNavigator() {
+export default function TabNavigator({ navigation }: StackProps) {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -49,6 +51,7 @@ export default function TabNavigator() {
         tabBarActiveBackgroundColor: colors.turquoise,
         tabBarStyle: {
           height: 60, // タブの高さ
+          display: getFocusedRouteNameFromRoute(route) === 'FriendStack' ? 'none' : 'flex',
         },
         tabBarLabelStyle: {
           marginBottom: 4, // 文字の位置
