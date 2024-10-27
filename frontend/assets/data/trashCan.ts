@@ -1,4 +1,4 @@
-export const trushCan = [
+export const trashCan = [
   { type: '燃えるゴミ', latitude: 35.67430556, longitude: 139.7155556 },
   { type: 'ペットボトル・カン・ビン', latitude: 35.6805, longitude: 139.7195833 },
   { type: 'ペットボトル・カン・ビン', latitude: 35.68094444, longitude: 139.7199444 },
@@ -76,4 +76,5 @@ export const trushCan = [
   { latitude: 35.714219, longitude: 139.752326 },
   { latitude: 35.705844, longitude: 139.763328 },
   { latitude: 35.704777, longitude: 139.771758 },
+  { latitude: 35.705844, longitude: 139.763328 },
 ];

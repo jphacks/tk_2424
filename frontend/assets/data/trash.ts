@@ -1,4 +1,4 @@
-export let trush = [
+export let trash = [
   { latitude: 35.713772, longitude: 139.761117, isDiscarded: false },
   { latitude: 35.714664, longitude: 139.759562, isDiscarded: false },
   { latitude: 35.712676, longitude: 139.761236, isDiscarded: false },
