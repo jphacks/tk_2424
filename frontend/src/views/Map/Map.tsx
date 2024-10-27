@@ -5,8 +5,8 @@ import CameraButton from '@components/CameraButton';
 import { Image } from 'expo-image';
 import MapView, { Region, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-import { trushCan } from '@assets/data/trushCan';
-// import { trush } from '@assets/data/trush';
+import { trashCan } from '@assets/data/trashCan';
+import { trash } from '@assets/data/trash';
 // import { useSWRGarbageCans } from 'src/api/fetchGarbageCans';
 import DiscardButton from '@components/DiscardButton';
 
@@ -61,9 +61,8 @@ const styles = StyleSheet.create({
 
 export default function Map({ navigation }: StackProps) {
   const [region, setRegion] = useState<Region | null>(null);
-  // const [discardButton, setdiscardButton] = useState<boolean>(false);
-  // const [isAbleToDiscarded, setIsAbleToDiscarded] = useState<boolean>(false);
-  const [trush, setTrush] = useState<any[]>([]);
+  const [trashList, setTrashesList] = useState<any[]>(trash);
+
   // const { garbageCans } = useSWRGarbageCans();
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -127,7 +126,7 @@ export default function Map({ navigation }: StackProps) {
             style={styles.garbageLogo}
           />
         </Marker>
-        {trushCan.map((item, index) => (
+        {trashCan.map((item, index) => (
           <Marker
             key={index}
             coordinate={{ latitude: item.latitude, longitude: item.longitude }}
@@ -135,7 +134,7 @@ export default function Map({ navigation }: StackProps) {
             <Image source={require('assets/images/trash_can.png')} style={styles.garbageLogo} />
           </Marker>
         ))}
-        {trush.map((item, index) => (
+        {trashList.map((item, index) => (
           <Marker key={index} coordinate={{ latitude: item.latitude, longitude: item.longitude }}>
             <Image
               source={
