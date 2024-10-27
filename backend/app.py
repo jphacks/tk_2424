@@ -156,30 +156,46 @@ def garbages():
         data = request.get_json()
         if "user_id" not in data or "longitude" not in data or "latitude" not in data:
             return (
-                jsonify({"error": "JSON must have user_id, longitude and latitude keys"}),
+                jsonify(
+                    {"error": "JSON must have user_id, longitude and latitude keys"}
+                ),
                 400,
             )
-        user_id, longitude, latitude = (
+        if "is_discarded" not in data:
+            data["is_discarded"] = False
+        user_id, longitude, latitude, is_discarded = (
             data["user_id"],
             data["longitude"],
             data["latitude"],
+            data["is_discarded"],
         )
-        if not isinstance(user_id, int) or not isinstance(longitude, float) or not isinstance(latitude, float):
+        if (
+            not isinstance(user_id, int)
+            or not isinstance(longitude, float)
+            or not isinstance(latitude, float)
+        ):
             return (
-                jsonify({"error": "user_id must be integer, longitude and latitude must be floats"}),
+                jsonify(
+                    {
+                        "error": "user_id must be integer, longitude and latitude must be floats"
+                    }
+                ),
                 400,
             )
-        user_id, longitude, latitude = (
-            data["user_id"],
-            data["longitude"],
-            data["latitude"],
-        )
-        if not isinstance(user_id, int) or not isinstance(longitude, float) or not isinstance(latitude, float):
+        if (
+            not isinstance(user_id, int)
+            or not isinstance(longitude, float)
+            or not isinstance(latitude, float)
+        ):
             return (
-                jsonify({"error": "user_id must be integer, longitude and latitude must be floats"}),
+                jsonify(
+                    {
+                        "error": "user_id must be integer, longitude and latitude must be floats"
+                    }
+                ),
                 400,
             )
-        db.insert_garbage(data["user_id"], data["longitude"], data["latitude"])
+        db.insert_garbage(user_id, latitude, longitude, is_discarded)
         return jsonify({"message": "Garbage inserted successfully"}), 201
 
 
@@ -194,7 +210,9 @@ def predict():
             return jsonify({"error": "Invalid image"}), 400
         img_pil = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
         model = test.load_model(test.model_path, num_classes=12, device=test.device)
-        predict_class = test.predict_image(img_pil, model, test.classes_list, test.device)
+        predict_class = test.predict_image(
+            img_pil, model, test.classes_list, test.device
+        )
         is_garbage = predict_class != "non-garbage"
         return jsonify({"is_garbage": is_garbage, "class": predict_class}), 200
     except Exception as e:

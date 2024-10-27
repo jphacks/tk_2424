@@ -177,13 +177,13 @@ def delete_user(user_id: int):
     conn.commit()
 
 
-def insert_garbage(user_id: int, latitude: float, longitude: float):
+def insert_garbage(user_id: int, latitude: float, longitude: float, is_discarded: bool = False):
     cursor.execute(
         """
-        INSERT INTO garbages (user_id, latitude, longitude)
-        VALUES (%s, %s, %s)
+        INSERT INTO garbages (user_id, latitude, longitude, is_discarded)
+        VALUES (%s, %s, %s, %s)
         """,
-        (user_id, latitude, longitude),
+        (user_id, latitude, longitude, is_discarded),
     )
     conn.commit()
 
