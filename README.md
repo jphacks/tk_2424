@@ -46,6 +46,14 @@
   - 自動マップ登録
   - 自動認証機能
 
+### キャラクター
+![カンミナ](frontend/assets/images/bonfire/カンミナ.gif)
+![ダンビー](frontend/assets/images/bonfire/ダンビー.gif)
+![テシウ](frontend/assets/images/bonfire/テシウ.gif)
+![ビニりん](frontend/assets/images/ビニりん.png)
+![ビニりん](frontend/assets/images/ビンボーイ.png)
+
+
 ## 開発技術
 
 ### 活用した技術
