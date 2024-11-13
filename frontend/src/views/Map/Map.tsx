@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, StatusBar, ActivityIndicator, Button, Modal, Text } from 'react-native';
+import { View, StyleSheet, StatusBar, ActivityIndicator } from 'react-native';
 import { StackProps } from '@navigator/stack';
 import CameraButton from '@components/CameraButton';
 import { Image } from 'expo-image';
@@ -7,17 +7,19 @@ import MapView, { Region, Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { trashCan } from '@assets/data/trashCan';
 import { trash } from '@assets/data/trash';
+import { colors } from '@theme';
 // import { useSWRGarbageCans } from 'src/api/fetchGarbageCans';
 import DiscardButton from '@components/DiscardButton';
-
-const tokyoTower = {
-  latitude: 35.6586,
-  longitude: 139.7454,
-};
+import ConditionsButton from '@components/ConditionsButton';
+import DiscardModal from '@components/DiscardModal';
 
 const styles = StyleSheet.create({
   root: {
     flex: 1,
+  },
+  garbageLogo: {
+    width: 120,
+    height: 120,
   },
   cameraButton: {
     position: 'absolute',
@@ -29,33 +31,10 @@ const styles = StyleSheet.create({
     bottom: 27,
     left: '36%',
   },
-  garbageLogo: {
-    width: 120,
-    height: 120,
-  },
   loading: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-  modalContent: {
-    width: 300,
-    padding: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  modalButtons: {
-    flexDirection: 'row',
-    marginTop: 20,
-    justifyContent: 'space-between',
-    width: '100%',
   },
 });
 
@@ -66,6 +45,10 @@ export default function Map({ navigation }: StackProps) {
   // const { garbageCans } = useSWRGarbageCans();
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
+
+  // ConditionsButton のstate管理
+  const [garbageStatus, setGarbageStatus] = useState('全て表示');
+  const [binStatus, setBinStatus] = useState('表示');
 
   function handleSend() {
     setModalVisible(false);
@@ -104,7 +87,7 @@ export default function Map({ navigation }: StackProps) {
   if (!region) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color={colors.green} />
       </View>
     );
   }
@@ -117,15 +100,12 @@ export default function Map({ navigation }: StackProps) {
         showsUserLocation
         mapPadding={{ top: 0, right: 0, bottom: 20, left: 10 }}
         region={region}>
-        <Marker
-          coordinate={tokyoTower}
-          title="Tokyo Tower"
-          description="This is a famous landmark in Tokyo">
-          <Image
-            source={require('assets/images/discarded_garbage.png')}
-            style={styles.garbageLogo}
-          />
-        </Marker>
+        <ConditionsButton
+          garbageStatus={garbageStatus}
+          binStatus={binStatus}
+          setGarbageStatus={setGarbageStatus}
+          setBinStatus={setBinStatus}
+        />
         {trashCan.map((item, index) => (
           <Marker
             key={index}
@@ -157,23 +137,12 @@ export default function Map({ navigation }: StackProps) {
         style={styles.cameraButton}
         onPress={() => navigation.navigate('CameraStack')}
       />
-      <Modal
-        animationType="fade"
-        transparent
+      <DiscardModal
         visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}>
-        <View style={styles.modalContainer}>
-          <View style={styles.modalContent}>
-            <Text>送信しますか？</Text>
-            <View style={styles.modalButtons}>
-              <View style={{ marginLeft: 25 }}>
-                <Button title="送信" onPress={handleSend} />
-              </View>
-              <Button title="キャンセル" onPress={handleCancel} />
-            </View>
-          </View>
-        </View>
-      </Modal>
+        onRequestClose={() => setModalVisible(false)}
+        handleSend={handleSend}
+        handleCancel={handleCancel}
+      />
     </View>
   );
 }
