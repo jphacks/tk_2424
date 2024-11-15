@@ -12,31 +12,7 @@ import { colors } from '@theme';
 import DiscardButton from '@components/DiscardButton';
 import ConditionsButton from '@components/ConditionsButton';
 import DiscardModal from '@components/DiscardModal';
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-  },
-  garbageLogo: {
-    width: 120,
-    height: 120,
-  },
-  cameraButton: {
-    position: 'absolute',
-    bottom: 25,
-    right: 25,
-  },
-  discardButton: {
-    position: 'absolute',
-    bottom: 27,
-    left: '36%',
-  },
-  loading: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
+import BossMarker from '@components/BossMarker';
 
 export default function Map({ navigation }: StackProps) {
   const [region, setRegion] = useState<Region | null>(null);
@@ -46,14 +22,17 @@ export default function Map({ navigation }: StackProps) {
   const [photoUri, setPhotoUri] = useState<string | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  // ConditionsButton のstate管理
+  // ConditionsButtonのstate管理
   const [garbageStatus, setGarbageStatus] = useState('全て表示');
   const [binStatus, setBinStatus] = useState('表示');
+
+  // BossMarkerのstate管理
+  const [bossModalVisible, setBossModalVisible] = useState(false);
 
   function handleSend() {
     setModalVisible(false);
     setPhotoUri(null);
-    // 写真を送信するロジックをここに追加
+    // todo: 写真を送信するロジックをここに追加
     navigation.navigate('SuccessStack');
   }
 
@@ -106,26 +85,64 @@ export default function Map({ navigation }: StackProps) {
           setGarbageStatus={setGarbageStatus}
           setBinStatus={setBinStatus}
         />
-        {trashCan.map((item, index) => (
-          <Marker
-            key={index}
-            coordinate={{ latitude: item.latitude, longitude: item.longitude }}
-            title={item.type}>
-            <Image source={require('assets/images/trash_can.png')} style={styles.garbageLogo} />
-          </Marker>
-        ))}
-        {trashList.map((item, index) => (
-          <Marker key={index} coordinate={{ latitude: item.latitude, longitude: item.longitude }}>
-            <Image
-              source={
-                item.isDiscarded
-                  ? require('assets/images/discarded_garbage.png')
-                  : require('assets/images/garbage.png')
-              }
-              style={styles.garbageLogo}
-            />
-          </Marker>
-        ))}
+        {binStatus === '表示'
+          ? trashCan.map((item, index) => (
+              <Marker
+                key={index}
+                coordinate={{ latitude: item.latitude, longitude: item.longitude }}
+                title={item.type}>
+                <Image source={require('assets/images/trash_can.png')} style={styles.garbageLogo} />
+              </Marker>
+            ))
+          : null}
+        {garbageStatus === '全て表示'
+          ? trashList.map((item, index) => (
+              <Marker
+                key={index}
+                coordinate={{ latitude: item.latitude, longitude: item.longitude }}>
+                <Image
+                  source={
+                    item.isDiscarded
+                      ? require('assets/images/discarded_garbage.png')
+                      : require('assets/images/garbage.png')
+                  }
+                  style={styles.garbageLogo}
+                />
+              </Marker>
+            ))
+          : garbageStatus === '廃棄済'
+            ? trashList.map((item, index) =>
+                item.isDiscarded ? (
+                  <Marker
+                    key={index}
+                    coordinate={{ latitude: item.latitude, longitude: item.longitude }}>
+                    <Image
+                      source={require('assets/images/discarded_garbage.png')}
+                      style={styles.garbageLogo}
+                    />
+                  </Marker>
+                ) : null,
+              )
+            : garbageStatus === '廃棄前'
+              ? trashList.map((item, index) =>
+                  !item.isDiscarded ? (
+                    <Marker
+                      key={index}
+                      coordinate={{ latitude: item.latitude, longitude: item.longitude }}>
+                      <Image
+                        source={require('assets/images/garbage.png')}
+                        style={styles.garbageLogo}
+                      />
+                    </Marker>
+                  ) : null,
+                )
+              : null}
+        <BossMarker
+          bossName="デブリオン"
+          bossModalVisible={bossModalVisible}
+          setBossModalVisible={setBossModalVisible}
+          coordinate={{ latitude: region.latitude, longitude: region.longitude }}
+        />
       </MapView>
       <DiscardButton
         style={styles.discardButton}
@@ -146,3 +163,31 @@ export default function Map({ navigation }: StackProps) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+  },
+  garbageLogo: {
+    width: 120,
+    height: 120,
+  },
+  cameraButton: {
+    position: 'absolute',
+    bottom: 25,
+    right: 25,
+  },
+  discardButton: {
+    position: 'absolute',
+    bottom: 27,
+    left: '36%',
+  },
+  loading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  customMarkerContainer: {
+    alignItems: 'center',
+  },
+});
