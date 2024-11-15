@@ -221,7 +221,7 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route("/yolo", methods=["POST"])
+@app.route("/yolo", methods=["GET"])
 def yolo():
     try:
         if not request.data:
@@ -229,7 +229,7 @@ def yolo():
         detections = yolo_predict.predict_objects(request.data)
         if len(detections) == 0:
             return jsonify({"type": "no"}), 200
-        return jsonify({"detections": detections[0]["name"]}), 200
+        return jsonify({"detection": detections[0]["name"]}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
