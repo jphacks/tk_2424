@@ -8,6 +8,7 @@ from dotenv import load_dotenv
 import os
 from oauthlib.oauth2 import WebApplicationClient
 import requests
+import yolo.yolo_predict as yolo_predict
 
 load_dotenv()
 
@@ -219,5 +220,18 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 
+@app.route("/yolo", methods=["POST"])
+def yolo():
+    try:
+        if not request.data:
+            return jsonify({"error": "Request must be an image"}), 400
+        detections = yolo_predict.predict_objects(request.data)
+        if len(detections) == 0:
+            return jsonify({"type": "no"}), 200
+        return jsonify({"detections": detections[0]["name"]}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    app.run(host="0.0.0.0", port=8081, debug=True)
