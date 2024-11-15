@@ -10,7 +10,16 @@ from func import load_data, perform_kmeans_clustering
 st.set_page_config(page_title="ゴミ＆ゴミ箱 管理パネル", page_icon="🗑️", layout="wide", initial_sidebar_state="expanded")
 
 # サイドバーのスタイリング
-st.sidebar.title("ゴミ＆ゴミ箱 管理パネル")
+with st.sidebar:
+    st.title("ゴミ＆ゴミ箱 管理パネル📝")
+    with st.expander("About", expanded=True):
+        st.write(
+            """
+            - **ゴミ箱の設置場所を最適化するためのデータ分析ツール**
+            - :orange[**データ引用元**]: ゴミンゴアプリ上データを想定
+            - :orange[**最適位置の計算**]: k-meansクラスタリングを使用
+            """
+        )
 
 ### css styling
 st.markdown(
@@ -103,7 +112,7 @@ with col1:
 
 # カラム2: 地図とKMeansクラスタリング
 with col2:
-    st.markdown("#### Map")
+    st.markdown("#### マップ")
     # 地図の中心座標（データの平均位置を使う）
     if not df_gb.empty:
         center_lat = df_gb["latitude"].mean()  # 緯度（latitude列を使用）
