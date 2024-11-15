@@ -27,3 +27,6 @@ RUN poetry install
 
 # Flaskアプリケーションのコードをコピー
 COPY . .
+
+# yoloのモデルをcopy
+COPY yolo/model/best.pt /app/yolo/model/best.pt

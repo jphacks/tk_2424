@@ -1,11 +1,12 @@
 services:
   app:
     build: .
+    runtime: nvidia
     tty: true
     container_name: gomingo-flask
     user: root
     ports:
-      - "8080:8080"
+      - "8081:8081"
     volumes:
       - .:/app
     env_file:
@@ -13,7 +14,7 @@ services:
     command: python app.py
 
   mysql:
-    platform: linux/x86_64
+    platform: linux/amd64
     image: mysql:8.0
     container_name: gomingo-mysql
     ports:
@@ -27,9 +28,7 @@ services:
       TZ: "Asia/Tokyo"
     restart: always
     volumes:
-      - ./config/my.cnf:/etc/mysql/conf.d/my.cnf
-      - mysql_data:/var/lib/mysql
-    command: --default-authentication-plugin=mysql_native_password
+      - ./db/conf.d:/etc/mysql/conf.d/my.cnf
+      - ./db/data:/var/lib/mysql
+    command: --authentication_policy=mysql_native_password
 
-volumes:
-  mysql_data:
