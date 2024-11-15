@@ -3,14 +3,66 @@ import folium
 import streamlit as st
 from streamlit_folium import st_folium
 import plotly.express as px
-from sklearn.cluster import KMeans
+import alter as alt
 from func import load_data, perform_kmeans_clustering
 
 # ページ設定
-st.set_page_config(page_title="ゴミ＆ゴミ箱ダッシュボード", page_icon="🗑️", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="ゴミ＆ゴミ箱 管理パネル", page_icon="🗑️", layout="wide", initial_sidebar_state="expanded")
 
 # サイドバーのスタイリング
-st.sidebar.title("ゴミ＆ゴミ箱ダッシュボード")
+st.sidebar.title("ゴミ＆ゴミ箱 管理パネル")
+
+### css styling
+st.markdown(
+    """
+<style>
+
+[data-testid="block-container"] {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 0rem;
+    margin-bottom: -7rem;
+}
+
+[data-testid="stVerticalBlock"] {
+    padding-left: 0rem;
+    padding-right: 0rem;
+}
+
+[data-testid="stMetric"] {
+    background-color: #393939;
+    text-align: center;
+    padding: 15px 0;
+}
+
+[data-testid="stMetricLabel"] {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+[data-testid="stMetricDeltaIcon-Up"] {
+    position: relative;
+    left: 38%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+[data-testid="stMetricDeltaIcon-Down"] {
+    position: relative;
+    left: 38%;
+    -webkit-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+</style>
+""",
+    unsafe_allow_html=True,
+)
+###
 
 # データのロード
 garbage_csv_path = "../backend/db/garbage.csv"
@@ -22,6 +74,7 @@ col1, col2, col3 = st.columns([1, 3, 1])
 
 # カラム1: Donut Chart for discarded vs not discarded garbage
 with col1:
+    st.markdown("#### 分析")
     if not df_gb.empty:
         discarded_counts = df_gb["is_discarded"].value_counts()
         discarded_data = pd.DataFrame(
@@ -50,6 +103,7 @@ with col1:
 
 # カラム2: 地図とKMeansクラスタリング
 with col2:
+    st.markdown("#### Map")
     # 地図の中心座標（データの平均位置を使う）
     if not df_gb.empty:
         center_lat = df_gb["latitude"].mean()  # 緯度（latitude列を使用）
@@ -105,6 +159,7 @@ with col2:
 
 # カラム3: ランキング表示（捨てられているカテゴリ）
 with col3:
+    st.markdown("#### 計画")
     if not df_gb.empty:
         discarded_categories = df_gb[df_gb["is_discarded"] == 1]["type"].value_counts().head(10)
         st.write("捨てられているカテゴリのランキング")
