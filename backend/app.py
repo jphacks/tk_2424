@@ -9,6 +9,7 @@ import os
 from oauthlib.oauth2 import WebApplicationClient
 import requests
 import yolo.yolo_predict as yolo_predict
+import json
 
 load_dotenv()
 
@@ -229,6 +230,29 @@ def yolo():
         if len(detections) == 0:
             return jsonify({"type": "no"}), 200
         return jsonify({"detections": detections[0]["name"]}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/status", methods=["GET"])
+def status():
+    try:
+        if not request.is_json:
+            return jsonify({"error": "Request must be JSON"}), 400
+        data = request.get_json()
+        if "level" not in data or "name" not in data:
+            return jsonify({"error": "JSON must have level and name keys"}), 400
+        level, name = data["level"], data["name"]
+        if not isinstance(level, str) or not isinstance(name, str):
+            return jsonify({"error": "level and name must be strings"}), 400
+        with open("./data/status.json", "r") as f:
+            status = json.load(f)
+        hp = status[name][level]["hp"]
+        attack = status[name][level]["attack"]
+        return (
+            jsonify({"hp": str(hp), "attack": str(attack)}),
+            200,
+        )
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
