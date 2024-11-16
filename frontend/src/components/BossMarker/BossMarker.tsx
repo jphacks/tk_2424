@@ -38,7 +38,9 @@ export const BossMarker: FC<BossMarkerProps> = ({
             source={require('assets/images/boss/デブリオン.png')}
             style={{ width: 120, height: 120 }}
           />
-          <Text style={{ paddingBottom: 5, fontWeight: 'bold' }}>{bossName}出現中</Text>
+          <Text style={{ paddingBottom: 5, fontWeight: 'bold' }}>
+            <Text style={{ color: 'red' }}>{bossName}</Text>出現中
+          </Text>
           <BeatButton onClick={() => setBossModalVisible(true)} />
         </View>
         {/* 三角形部分（ピンの先端） */}
@@ -60,7 +62,7 @@ const styles = StyleSheet.create({
     width: roundLength,
     height: roundLength,
     borderRadius: roundLength / 2,
-    backgroundColor: '#36C1A7',
+    backgroundColor: 'red',
     zIndex: 1, // 丸を前面に配置
     position: 'absolute',
     top: -145,
@@ -82,7 +84,7 @@ const styles = StyleSheet.create({
     borderRightWidth: borderLRWidth,
     borderTopWidth: borderTWidth,
     borderBottomWidth: 0,
-    borderTopColor: '#36C1A7',
+    borderTopColor: 'red',
     borderLeftColor: 'transparent',
     borderRightColor: 'transparent',
     position: 'absolute',
