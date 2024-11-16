@@ -37,9 +37,9 @@ st.markdown(
 }
 
 [data-testid="stMetricLabel"] {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 [data-testid="stMetricDeltaIcon-Up"] {
@@ -65,8 +65,8 @@ st.markdown(
 ###
 
 # データのロード
-garbage_csv_path = "../backend/db/garbage.csv"
-garbage_cans_csv_path = "../backend/db/garbage_cans.csv"
+garbage_csv_path = "./sample_garbage.csv"
+garbage_cans_csv_path = "./sample_cans.csv"
 df_gb, df_gbcans = load_data(garbage_csv_path=garbage_csv_path, garbage_cans_csv_path=garbage_cans_csv_path)
 
 # カラム設定（カラム2を最も太くする）
