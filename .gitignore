@@ -1,3 +1,5 @@
+runs
+*.pt
 .venv
 admin_panel/.admin_venv
 admin_panel/__pycache__

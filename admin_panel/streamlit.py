@@ -4,10 +4,17 @@ import streamlit as st
 from streamlit_folium import st_folium
 import plotly.express as px
 import alter as alt
-from func import load_data, perform_kmeans_clustering
+from func import load_data, perform_kmeans_clustering, perform_xmeans_clustering
+from streamlit_folium import st_folium
+
 
 # ページ設定
-st.set_page_config(page_title="ゴミ＆ゴミ箱 管理パネル", page_icon="🗑️", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(
+    page_title="ゴミ＆ゴミ箱 管理パネル",
+    page_icon="🗑️",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
 # サイドバーのスタイリング
 with st.sidebar:
@@ -46,9 +53,9 @@ st.markdown(
 }
 
 [data-testid="stMetricLabel"] {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 [data-testid="stMetricDeltaIcon-Up"] {
@@ -74,8 +81,8 @@ st.markdown(
 ###
 
 # データのロード
-garbage_csv_path = "../backend/db/garbage.csv"
-garbage_cans_csv_path = "../backend/db/garbage_cans.csv"
+garbage_csv_path = "./sample_garbage.csv"
+garbage_cans_csv_path = "./sample_cans.csv"
 df_gb, df_gbcans = load_data(garbage_csv_path=garbage_csv_path, garbage_cans_csv_path=garbage_cans_csv_path)
 
 # カラム設定（カラム2を最も太くする）
@@ -87,10 +94,19 @@ with col1:
     if not df_gb.empty:
         discarded_counts = df_gb["is_discarded"].value_counts()
         discarded_data = pd.DataFrame(
-            {"Status": ["Discarded", "Not Discarded"], "Count": [discarded_counts.get(1, 0), discarded_counts.get(0, 0)]}
+            {
+                "Status": ["Discarded", "Not Discarded"],
+                "Count": [discarded_counts.get(1, 0), discarded_counts.get(0, 0)],
+            }
         )
 
-        fig = px.pie(discarded_data, names="Status", values="Count", hole=0.3, title="捨てられたゴミの割合")
+        fig = px.pie(
+            discarded_data,
+            names="Status",
+            values="Count",
+            hole=0.3,
+            title="捨てられたゴミの割合",
+        )
         st.plotly_chart(fig)
 
         # Calculate percentage change for discarded garbage (last month vs current month)
@@ -111,18 +127,28 @@ with col1:
         st.write(f"捨てられたゴミの先月比: {change_percentage:.2f}%")
 
 # カラム2: 地図とKMeansクラスタリング
+# 地図を表示する処理
 with col2:
     st.markdown("#### マップ")
-    # 地図の中心座標（データの平均位置を使う）
+
+    # クラスタリングの数を入力
+    num_clusters = st.number_input(
+        "クラスタリングの数を入力してください",
+        min_value=1,
+        max_value=10,
+        value=4,
+        step=1,
+    )
+
     if not df_gb.empty:
-        center_lat = df_gb["latitude"].mean()  # 緯度（latitude列を使用）
-        center_lon = df_gb["longitude"].mean()  # 経度（longitude列を使用）
+        center_lat = df_gb["latitude"].median()  # 緯度（latitude列を使用）
+        center_lon = df_gb["longitude"].median()  # 経度（longitude列を使用）
     else:
         center_lat = 35.6895
         center_lon = 139.6917
 
     # 地図を作成
-    m = folium.Map(location=[center_lat, center_lon], zoom_start=12)
+    m = folium.Map(location=[center_lat, center_lon], zoom_start=13)
 
     # ゴミ箱の位置を地図に表示
     if not df_gbcans.empty:
@@ -153,9 +179,10 @@ with col2:
                 icon=folium.Icon(color="blue", icon="arrow-down"),
             ).add_to(m)
 
-    # 最初にクラスタリングを実行してクラスタの中心を表示
+    # クラスタリングを実行してクラスタの中心を表示
     if not df_gb.empty:
-        centroids = perform_kmeans_clustering(df_gb, num_clusters=5)
+        centroids = perform_kmeans_clustering(df_gb, num_clusters=num_clusters)
+        print(centroids)  # クラスタ中心をデバッグ用に表示
         for idx, centroid in enumerate(centroids):
             folium.Marker(
                 location=[centroid[0], centroid[1]],
@@ -165,6 +192,7 @@ with col2:
 
     # 地図を表示
     st_folium(m, width=700, height=500)
+
 
 # カラム3: ランキング表示（捨てられているカテゴリ）
 with col3:
