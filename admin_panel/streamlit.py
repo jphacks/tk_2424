@@ -5,6 +5,7 @@ from streamlit_folium import st_folium
 import plotly.express as px
 import alter as alt
 from func import load_data, perform_kmeans_clustering, perform_xmeans_clustering
+from streamlit_folium import st_folium
 
 
 # ページ設定
@@ -16,7 +17,16 @@ st.set_page_config(
 )
 
 # サイドバーのスタイリング
-st.sidebar.title("ゴミ＆ゴミ箱 管理パネル")
+with st.sidebar:
+    st.title("ゴミ＆ゴミ箱 管理パネル📝")
+    with st.expander("About", expanded=True):
+        st.write(
+            """
+            - **ゴミ箱の設置場所を最適化するためのデータ分析ツール**
+            - :orange[**データ引用元**]: ゴミンゴアプリ上データを想定
+            - :orange[**最適位置の計算**]: k-meansクラスタリングを使用
+            """
+        )
 
 ### css styling
 st.markdown(
@@ -73,9 +83,7 @@ st.markdown(
 # データのロード
 garbage_csv_path = "./sample_garbage.csv"
 garbage_cans_csv_path = "./sample_cans.csv"
-df_gb, df_gbcans = load_data(
-    garbage_csv_path=garbage_csv_path, garbage_cans_csv_path=garbage_cans_csv_path
-)
+df_gb, df_gbcans = load_data(garbage_csv_path=garbage_csv_path, garbage_cans_csv_path=garbage_cans_csv_path)
 
 # カラム設定（カラム2を最も太くする）
 col1, col2, col3 = st.columns([1, 3, 1])
@@ -106,30 +114,22 @@ with col1:
         current_month = df_gb["month"].max()
         last_month = current_month - 1
 
-        current_month_count = df_gb[df_gb["month"] == current_month][
-            "is_discarded"
-        ].sum()
+        current_month_count = df_gb[df_gb["month"] == current_month]["is_discarded"].sum()
         last_month_count = (
-            df_gb[df_gb["month"] == last_month]["is_discarded"].sum()
-            if last_month in df_gb["month"].values
-            else 0
+            df_gb[df_gb["month"] == last_month]["is_discarded"].sum() if last_month in df_gb["month"].values else 0
         )
 
         if last_month_count > 0:
-            change_percentage = (
-                (current_month_count - last_month_count) / last_month_count
-            ) * 100
+            change_percentage = ((current_month_count - last_month_count) / last_month_count) * 100
         else:
             change_percentage = 0
 
         st.write(f"捨てられたゴミの先月比: {change_percentage:.2f}%")
 
 # カラム2: 地図とKMeansクラスタリング
-from streamlit_folium import st_folium
-
 # 地図を表示する処理
 with col2:
-    st.markdown("#### Map")
+    st.markdown("#### マップ")
 
     # クラスタリングの数を入力
     num_clusters = st.number_input(
@@ -198,8 +198,6 @@ with col2:
 with col3:
     st.markdown("#### 計画")
     if not df_gb.empty:
-        discarded_categories = (
-            df_gb[df_gb["is_discarded"] == 1]["type"].value_counts().head(10)
-        )
+        discarded_categories = df_gb[df_gb["is_discarded"] == 1]["type"].value_counts().head(10)
         st.write("捨てられているカテゴリのランキング")
         st.bar_chart(discarded_categories)
