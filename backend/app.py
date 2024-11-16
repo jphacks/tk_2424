@@ -32,11 +32,6 @@ def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
 
 
-@app.route("/")
-def hello():
-    return jsonify({"message": "Hello, Flask!"})
-
-
 @app.route("/login")
 def login():
     # Discover Google's authorization endpoint
