@@ -36,7 +36,11 @@ def init_db():
             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
             deleted_at TIMESTAMP DEFAULT NULL,
-            note TEXT
+            note TEXT,
+            burnable BOOLEAN,
+            non_burnable BOOLEAN,
+            bottle_can BOOLEAN,
+            ashtray BOOLEAN
         )
         """
     )
@@ -87,13 +91,21 @@ def init_db():
 init_db()
 
 
-def insert_garbage_can(longitude: float, latitude: float, note: str = "") -> bool:
+def insert_garbage_can(
+    longitude: float,
+    latitude: float,
+    note: str = "",
+    burnable: bool = False,
+    non_burnable: bool = False,
+    bottle_can: bool = False,
+    ashtray: bool = False,
+) -> bool:
     cursor.execute(
         """
-        INSERT INTO garbage_cans (longitude, latitude, note)
-        VALUES (%s, %s, %s)
+        INSERT INTO garbage_cans (longitude, latitude, note, burnable, non_burnable, bottle_can, ashtray)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
         """,
-        (longitude, latitude, note),
+        (longitude, latitude, note, burnable, non_burnable, bottle_can, ashtray),
     )
     conn.commit()
 
@@ -177,13 +189,15 @@ def delete_user(user_id: int):
     conn.commit()
 
 
-def insert_garbage(user_id: int, latitude: float, longitude: float):
+def insert_garbage(
+    user_id: int, latitude: float, longitude: float, is_discarded: bool = False
+):
     cursor.execute(
         """
-        INSERT INTO garbages (user_id, latitude, longitude)
-        VALUES (%s, %s, %s)
+        INSERT INTO garbages (user_id, latitude, longitude, is_discarded)
+        VALUES (%s, %s, %s, %s)
         """,
-        (user_id, latitude, longitude),
+        (user_id, latitude, longitude, is_discarded),
     )
     conn.commit()
 

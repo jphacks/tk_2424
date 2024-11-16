@@ -4,3 +4,4 @@ __pycache__
 *.jpg
 *.db
 .venv
+*.pt
