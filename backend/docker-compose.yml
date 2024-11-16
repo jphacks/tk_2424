@@ -1,7 +1,6 @@
 services:
   app:
     build: .
-    runtime: nvidia
     tty: true
     container_name: gomingo-flask
     user: root
