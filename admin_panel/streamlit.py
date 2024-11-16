@@ -120,10 +120,10 @@ with col1:
                 "Type": st.column_config.TextColumn(
                     "ゴミの種類",
                 ),
-                "Ratio": st.column_config.ProgressColumn(  # ProgressColumn を使用して割合を表示
+                "Ratio": st.column_config.ProgressColumn(
                     "割合 (%)",
                     min_value=0,
-                    max_value=100,  # 割合なので 100 を最大値に設定
+                    max_value=100,
                     format="%.2f%%",  # 小数点2桁までのフォーマット
                 ),
             },
@@ -261,7 +261,7 @@ with col3:
         title="ゴミ箱の種別割合",
         labels={"Ratio (%)": "割合 (%)"},
         color="Type",
-        color_discrete_sequence=px.colors.qualitative.Set2,  # カラーパレットの指定
+        color_discrete_sequence=px.colors.qualitative.Set2,
     )
     fig.update_traces(texttemplate="%{text:.2f}%", textposition="outside")
 
