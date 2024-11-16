@@ -5,8 +5,10 @@ export type StackParamList = {
   BonfireStack: undefined;
   BookStack: undefined;
   CameraStack: undefined;
-  FriendStack: undefined;
+  FriendStack: { url: string };
   SuccessStack: undefined;
+  BattleStack: undefined;
+  BattleSuccessStack: undefined;
   // add more screen props...
 };
 

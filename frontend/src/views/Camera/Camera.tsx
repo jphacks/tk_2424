@@ -40,7 +40,7 @@ export default function Camera({ navigation, route }: StackProps) {
     console.log('Photo sent:', photoUri);
     setModalVisible(false);
     setPhotoUri(null);
-    navigation.navigate('FriendStack');
+    navigation.navigate('FriendStack', { url: '' });
   }
 
   function handleCancel() {

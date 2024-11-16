@@ -6,11 +6,13 @@ import { colors } from '@theme';
 type BossModalProps = {
   bossModalVisible: boolean;
   setBossModalVisible: (visible: boolean) => void;
+  handleGoToBattle: () => void;
 } & ModalProps;
 
 export const BossModal: FC<BossModalProps> = ({
   bossModalVisible,
   setBossModalVisible,
+  handleGoToBattle,
   ...restProps
 }) => {
   return (
@@ -28,11 +30,11 @@ export const BossModal: FC<BossModalProps> = ({
           <View style={styles.bossButtonContainer}>
             <TouchableOpacity
               style={[styles.button, { backgroundColor: colors.orange }]}
-              onPress={() => setBossModalVisible(false)}>
+              onPress={handleGoToBattle}>
               <Text style={styles.buttonText}>はい</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.button, { backgroundColor: colors.orange }]}
+              style={[styles.button, { backgroundColor: '#ddd' }]}
               onPress={() => setBossModalVisible(false)}>
               <Text style={styles.buttonText}>やめる</Text>
             </TouchableOpacity>

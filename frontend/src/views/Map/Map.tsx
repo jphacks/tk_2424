@@ -41,6 +41,11 @@ export default function Map({ navigation }: StackProps) {
     setPhotoUri(null); // 写真のURIをクリア
   }
 
+  function handleGoToBattle() {
+    setBossModalVisible(false);
+    navigation.navigate('BattleStack');
+  }
+
   useEffect(() => {
     const requestLocationPermission = async () => {
       const { status } = await Location.requestForegroundPermissionsAsync();
@@ -66,7 +71,7 @@ export default function Map({ navigation }: StackProps) {
   if (!region) {
     return (
       <View style={styles.loading}>
-        <ActivityIndicator size="large" color={colors.green} />
+        <ActivityIndicator size={2} color={colors.green} />
       </View>
     );
   }
@@ -88,9 +93,9 @@ export default function Map({ navigation }: StackProps) {
         {binStatus === '表示'
           ? trashCan.map((item, index) => (
               <Marker
+                tappable={false}
                 key={index}
-                coordinate={{ latitude: item.latitude, longitude: item.longitude }}
-                title={item.type}>
+                coordinate={{ latitude: item.latitude, longitude: item.longitude }}>
                 <Image source={require('assets/images/trash_can.png')} style={styles.garbageLogo} />
               </Marker>
             ))
@@ -98,6 +103,7 @@ export default function Map({ navigation }: StackProps) {
         {garbageStatus === '全て表示'
           ? trashList.map((item, index) => (
               <Marker
+                tappable={false}
                 key={index}
                 coordinate={{ latitude: item.latitude, longitude: item.longitude }}>
                 <Image
@@ -114,6 +120,7 @@ export default function Map({ navigation }: StackProps) {
             ? trashList.map((item, index) =>
                 item.isDiscarded ? (
                   <Marker
+                    tappable={false}
                     key={index}
                     coordinate={{ latitude: item.latitude, longitude: item.longitude }}>
                     <Image
@@ -127,6 +134,7 @@ export default function Map({ navigation }: StackProps) {
               ? trashList.map((item, index) =>
                   !item.isDiscarded ? (
                     <Marker
+                      tappable={false}
                       key={index}
                       coordinate={{ latitude: item.latitude, longitude: item.longitude }}>
                       <Image
@@ -141,7 +149,9 @@ export default function Map({ navigation }: StackProps) {
           bossName="デブリオン"
           bossModalVisible={bossModalVisible}
           setBossModalVisible={setBossModalVisible}
-          coordinate={{ latitude: region.latitude, longitude: region.longitude }}
+          handleGoToBattle={handleGoToBattle}
+          tracksViewChanges={false}
+          coordinate={{ latitude: 35.67430558, longitude: 139.7155556 }}
         />
       </MapView>
       <DiscardButton

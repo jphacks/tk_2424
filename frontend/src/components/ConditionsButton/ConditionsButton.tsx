@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
   },
   closeButtonText: {
     fontSize: 16,
-    color: '#fff',
+    color: 'black',
     fontWeight: 'bold',
   },
   optionButton: {
