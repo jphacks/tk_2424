@@ -35,7 +35,7 @@ export const BossMarker: FC<BossMarkerProps> = ({
         {/* 丸い部分 */}
         <View style={styles.circle} />
         <View style={styles.whiteCircle}>
-          <Text style={{ paddingTop: 20, fontWeight: 'bold' }}>千代田区 危険度B</Text>
+          <Text style={{ paddingTop: 20, fontWeight: 'bold' }}>新宿区 危険度B</Text>
           <Image
             source={require('assets/images/boss/デブリオン.png')}
             style={{ width: 120, height: 120 }}

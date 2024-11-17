@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react';
 import { CameraCapturedPicture, CameraView, useCameraPermissions } from 'expo-camera';
 import { Button, Modal, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { StackProps } from '@navigator';
+import { postBinaryImage } from 'src/api/fetchPredictionByImage';
 
 export default function Camera({ navigation, route }: StackProps) {
   const [permission, requestPermission] = useCameraPermissions();
@@ -36,11 +37,19 @@ export default function Camera({ navigation, route }: StackProps) {
     }
   }
 
-  function handleSend() {
-    console.log('Photo sent:', photoUri);
-    setModalVisible(false);
-    setPhotoUri(null);
-    navigation.navigate('FriendStack', { url: '' });
+  async function handleSend() {
+    try {
+      const res = await postBinaryImage(photoUri as string);
+      console.log('Photo sent:', photoUri);
+      console.log(res);
+      setModalVisible(false);
+      setPhotoUri(null);
+      navigation.navigate('FriendStack', { url: '' });
+    } catch (error) {
+      console.error('Error sending picture:', error);
+      setModalVisible(false);
+      setPhotoUri(null);
+    }
   }
 
   function handleCancel() {

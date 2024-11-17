@@ -55,7 +55,7 @@ export default function Bonfire({ navigation }: StackProps) {
         <Image
           source={
             canItem
-              ? require('assets/images/fit/カンミナ.gif')
+              ? require('assets/images/fit/can.gif')
               : require('assets/images/bonfire/カンミナ.gif')
           }
           style={styles.gifSize}
@@ -65,7 +65,7 @@ export default function Bonfire({ navigation }: StackProps) {
         <Image
           source={
             danItem
-              ? require('assets/images/fit/ダンビー.gif')
+              ? require('assets/images/fit/dan.gif')
               : require('assets/images/bonfire/ダンビー.gif')
           }
           style={styles.gifSize}
