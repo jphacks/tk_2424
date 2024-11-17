@@ -13,8 +13,13 @@ import DiscardButton from '@components/DiscardButton';
 import ConditionsButton from '@components/ConditionsButton';
 import DiscardModal from '@components/DiscardModal';
 import BossMarker from '@components/BossMarker';
+// import { useSWRGarbage } from 'src/api/fetchGarbage';
+// import { useSWRGarbageCans } from 'src/api/fetchGarbageCans';
 
 export default function Map({ navigation }: StackProps) {
+  // const { garbage } = useSWRGarbage();
+  // const { garbageCans } = useSWRGarbageCans();
+  // console.log('garbageCans', garbageCans);
   const [region, setRegion] = useState<Region | null>(null);
   const [trashList, setTrashesList] = useState<any[]>(trash);
 
@@ -91,7 +96,8 @@ export default function Map({ navigation }: StackProps) {
           setBinStatus={setBinStatus}
         />
         {binStatus === '表示'
-          ? trashCan.map((item, index) => (
+          ? // ? (Array.isArray(garbageCans) && garbageCans.length > 0 ? garbageCans : trashCan).map(
+            trashCan.map((item, index) => (
               <Marker
                 tappable={false}
                 key={index}
@@ -146,12 +152,13 @@ export default function Map({ navigation }: StackProps) {
                 )
               : null}
         <BossMarker
+          style={{ zIndex: 100 }}
           bossName="デブリオン"
           bossModalVisible={bossModalVisible}
           setBossModalVisible={setBossModalVisible}
           handleGoToBattle={handleGoToBattle}
           tracksViewChanges={false}
-          coordinate={{ latitude: 35.67430558, longitude: 139.7155556 }}
+          coordinate={{ latitude: 35.6905, longitude: 139.6995 }}
         />
       </MapView>
       <DiscardButton

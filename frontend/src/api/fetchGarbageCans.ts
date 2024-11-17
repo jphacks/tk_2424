@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { axiosInstance } from 'src/libs/axios';
 
 import useSWR from 'swr';
@@ -14,7 +14,7 @@ export type GarbageCanType = {
 };
 
 export const fetchGarbageCans = async () => {
-  const { data }: AxiosResponse<GarbageCanType> = await axiosInstance.get(
+  const { data }: AxiosResponse<GarbageCanType> = await axios.get(
     `${process.env.EXPO_PUBLIC_API_URL}/garbage-cans`,
   );
   return data;
