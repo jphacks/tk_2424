@@ -51,7 +51,12 @@ export default function TabNavigator({ navigation }: StackProps) {
         tabBarActiveBackgroundColor: colors.turquoise,
         tabBarStyle: {
           height: 60, // タブの高さ
-          display: getFocusedRouteNameFromRoute(route) === 'FriendStack' ? 'none' : 'flex',
+          paddingBottom: 0,
+          display:
+            getFocusedRouteNameFromRoute(route) === 'FriendStack'
+              ? // getFocusedRouteNameFromRoute(route) === 'BattleStack'
+                'none'
+              : 'flex',
         },
         tabBarLabelStyle: {
           marginBottom: 4, // 文字の位置

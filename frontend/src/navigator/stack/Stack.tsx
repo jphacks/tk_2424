@@ -13,6 +13,8 @@ import Book from '@views/Book';
 import Camera from '@views/Camera';
 import Friend from '@views/Friend';
 import Success from '@views/Success';
+import Battle from '@views/Battle';
+import BattleSuccess from '@views/BattleSuccess';
 
 const Stack = createNativeStackNavigator<StackParamList>();
 
@@ -62,6 +64,28 @@ export function MapStackNavigator({ navigation }: DrawerProps) {
           headerTitle: () => <StackHeaderTitle />,
           headerLeft: () => <></>,
           headerRight: () => <MailButton unread />,
+        }}
+      />
+      <Stack.Screen
+        component={Battle}
+        name="BattleStack"
+        options={{
+          title: 'Battle',
+          headerTitle: () => <StackHeaderTitle />,
+          headerLeft: () => <></>,
+          headerRight: () => <MailButton unread />,
+          headerTitleAlign: 'center',
+        }}
+      />
+      <Stack.Screen
+        component={BattleSuccess}
+        name="BattleSuccessStack"
+        options={{
+          title: 'BattleSuccess',
+          headerTitle: () => <StackHeaderTitle />,
+          headerLeft: () => <></>,
+          headerRight: () => <MailButton unread />,
+          headerTitleAlign: 'center',
         }}
       />
     </Stack.Navigator>

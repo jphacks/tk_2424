@@ -34,6 +34,11 @@ export const characters: CharacterType[] = [
   },
   {
     number: 4,
+    name: 'あああ',
+    image: require('assets/images/unknown.png'),
+  },
+  {
+    number: 5,
     name: 'ダンビー',
     image: require('assets/images/ダンビー.png'),
     description:
@@ -42,7 +47,12 @@ export const characters: CharacterType[] = [
     bonfireGif: require('assets/images/bonfire/ダンビー.gif'),
   },
   {
-    number: 5,
+    number: 6,
+    name: 'いいい',
+    image: require('assets/images/unknown.png'),
+  },
+  {
+    number: 7,
     name: 'ビニりん',
     image: require('assets/images/ビニりん.png'),
     description:
@@ -50,20 +60,38 @@ export const characters: CharacterType[] = [
     bonfireGif: require('assets/images/bonfire/ビニりん.gif'),
   },
   {
-    number: 6,
+    number: 8,
     name: 'ビンボーイ',
     image: require('assets/images/ビンボーイ.png'),
     description: '何かを失くしたって、何も変わらないし、ここにいるのもそれなりに気に入ってる。',
     bonfireGif: require('assets/images/bonfire/ビンボーイ.gif'),
   },
-  { number: 7, name: 'カンミナ', image: require('assets/images/unknown.png') },
-  { number: 8, name: 'カンミナ', image: require('assets/images/unknown.png') },
-  { number: 9, name: 'カンミナ', image: require('assets/images/unknown.png') },
+  {
+    number: 9,
+    name: 'ガラクズ',
+    image: require('assets/images/ガラクズ.png'),
+    description:
+      '元はイキのいい吸い殻だったが、今じゃ街の片隅で自由気ままにやってる。拾われる？へっ、そんなんこっちから願い下げだぜ。お行儀よくゴミ箱に入るなんざ性に合わねぇ。',
+    bookGif: require('assets/images/book/ガラクズ.gif'),
+  },
   { number: 10, name: 'カンミナ', image: require('assets/images/unknown.png') },
   { number: 11, name: 'カンミナ', image: require('assets/images/unknown.png') },
-  { number: 12, name: 'カンミナ', image: require('assets/images/unknown.png') },
-  { number: 13, name: 'カンミナ', image: require('assets/images/unknown.png') },
+  {
+    number: 12,
+    name: 'バグパック',
+    image: require('assets/images/バグパック.png'),
+    description:
+      '袋いっぱいに詰め込んだら、お腹も心も満たされる。 ポッチャリ感が愛らしい人気者。でもあんまり詰めすぎると、はち切れちゃうかも…？',
+    bookGif: require('assets/images/book/バグパック.gif'),
+  },
+  {
+    number: 13,
+    name: 'バズリーナ',
+    image: require('assets/images/バズリーナ.png'),
+    description:
+      'ストローをクイッと傾けて角度を決めたら、ハッシュタグはもちろん #カフェ映え。いつか誰かが拾ってくれるまで、ポーズと笑顔だけは忘れない。中身は空っぽだけど、オシャレも自己アピールも、外見からが基本でしょ？',
+    bookGif: require('assets/images/book/バズリーナ.gif'),
+  },
   { number: 14, name: 'カンミナ', image: require('assets/images/unknown.png') },
   { number: 15, name: 'カンミナ', image: require('assets/images/unknown.png') },
-  { number: 16, name: 'カンミナ', image: require('assets/images/unknown.png') },
 ];
