@@ -10,12 +10,15 @@ from oauthlib.oauth2 import WebApplicationClient
 import requests
 import yolo.yolo_predict as yolo_predict
 import json
+from flask_cors import CORS
 
 load_dotenv()
 
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 app = Flask(__name__)
+
+CORS(app)
 
 GOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 GOOGLE_CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
@@ -216,7 +219,7 @@ def predict():
         return jsonify({"error": str(e)}), 500
 
 
-@app.route("/yolo", methods=["GET"])
+@app.route("/yolo", methods=["GET", "POST"])
 def yolo():
     try:
         if not request.data:
