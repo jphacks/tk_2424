@@ -46,6 +46,14 @@
   - 自動マップ登録
   - 自動認証機能
 
+### キャラクター
+![カンミナ](frontend/assets/images/bonfire/カンミナ.gif)
+![ダンビー](frontend/assets/images/bonfire/ダンビー.gif)
+![テシウ](frontend/assets/images/bonfire/テシウ.gif)
+![ビニりん](frontend/assets/images/ビニりん.png)
+![ビニりん](frontend/assets/images/ビンボーイ.png)
+
+
 ## 開発技術
 
 ### 活用した技術
@@ -75,3 +83,15 @@
   - **約 1 万枚の画像** を収集し、12 クラスに分類する分類モデルを作成
   - その学習済みモデルを使用し、ユーザが撮影したゴミの画像を分類します
   - モデルの学習コード：`./backend/model/train.py`
+
+
+### 事前開発
+
+- UI案
+- プロトタイプ
+- キャラクターデザイン
+
+### Hack Day で開発した技術
+
+- その他すべて
+

@@ -1,0 +1,17 @@
+admin panel 起動時の注意
+
+requirements.txt を使用
+
+仮想環境を作成
+
+```bash
+python3 -m venv .admin_venv
+```
+
+```bash
+source .admin_venv/bin/activate
+```
+
+```bash
+pip install -r requirements.txt
+```

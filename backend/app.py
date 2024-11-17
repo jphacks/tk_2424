@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 import os
 from oauthlib.oauth2 import WebApplicationClient
 import requests
+import yolo.yolo_predict as yolo_predict
+import json
 
 load_dotenv()
 
@@ -28,11 +30,6 @@ client = WebApplicationClient(GOOGLE_CLIENT_ID)
 
 def get_google_provider_cfg():
     return requests.get(GOOGLE_DISCOVERY_URL).json()
-
-
-@app.route("/")
-def hello():
-    return jsonify({"message": "Hello, Flask!"})
 
 
 @app.route("/login")
@@ -156,30 +153,46 @@ def garbages():
         data = request.get_json()
         if "user_id" not in data or "longitude" not in data or "latitude" not in data:
             return (
-                jsonify({"error": "JSON must have user_id, longitude and latitude keys"}),
+                jsonify(
+                    {"error": "JSON must have user_id, longitude and latitude keys"}
+                ),
                 400,
             )
-        user_id, longitude, latitude = (
+        if "is_discarded" not in data:
+            data["is_discarded"] = False
+        user_id, longitude, latitude, is_discarded = (
             data["user_id"],
             data["longitude"],
             data["latitude"],
+            data["is_discarded"],
         )
-        if not isinstance(user_id, int) or not isinstance(longitude, float) or not isinstance(latitude, float):
+        if (
+            not isinstance(user_id, int)
+            or not isinstance(longitude, float)
+            or not isinstance(latitude, float)
+        ):
             return (
-                jsonify({"error": "user_id must be integer, longitude and latitude must be floats"}),
+                jsonify(
+                    {
+                        "error": "user_id must be integer, longitude and latitude must be floats"
+                    }
+                ),
                 400,
             )
-        user_id, longitude, latitude = (
-            data["user_id"],
-            data["longitude"],
-            data["latitude"],
-        )
-        if not isinstance(user_id, int) or not isinstance(longitude, float) or not isinstance(latitude, float):
+        if (
+            not isinstance(user_id, int)
+            or not isinstance(longitude, float)
+            or not isinstance(latitude, float)
+        ):
             return (
-                jsonify({"error": "user_id must be integer, longitude and latitude must be floats"}),
+                jsonify(
+                    {
+                        "error": "user_id must be integer, longitude and latitude must be floats"
+                    }
+                ),
                 400,
             )
-        db.insert_garbage(data["user_id"], data["longitude"], data["latitude"])
+        db.insert_garbage(user_id, latitude, longitude, is_discarded)
         return jsonify({"message": "Garbage inserted successfully"}), 201
 
 
@@ -194,12 +207,50 @@ def predict():
             return jsonify({"error": "Invalid image"}), 400
         img_pil = Image.fromarray(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
         model = test.load_model(test.model_path, num_classes=12, device=test.device)
-        predict_class = test.predict_image(img_pil, model, test.classes_list, test.device)
+        predict_class = test.predict_image(
+            img_pil, model, test.classes_list, test.device
+        )
         is_garbage = predict_class != "non-garbage"
         return jsonify({"is_garbage": is_garbage, "class": predict_class}), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 
+@app.route("/yolo", methods=["GET"])
+def yolo():
+    try:
+        if not request.data:
+            return jsonify({"error": "Request must be an image"}), 400
+        detections = yolo_predict.predict_objects(request.data)
+        if len(detections) == 0:
+            return jsonify({"type": "no"}), 200
+        return jsonify({"detection": detections[0]["name"]}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+@app.route("/status", methods=["GET"])
+def status():
+    try:
+        if not request.is_json:
+            return jsonify({"error": "Request must be JSON"}), 400
+        data = request.get_json()
+        if "level" not in data or "name" not in data:
+            return jsonify({"error": "JSON must have level and name keys"}), 400
+        level, name = data["level"], data["name"]
+        if not isinstance(level, str) or not isinstance(name, str):
+            return jsonify({"error": "level and name must be strings"}), 400
+        with open("./data/status.json", "r") as f:
+            status = json.load(f)
+        hp = status[name][level]["hp"]
+        attack = status[name][level]["attack"]
+        return (
+            jsonify({"hp": str(hp), "attack": str(attack)}),
+            200,
+        )
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080, debug=True)
+    app.run(host="0.0.0.0", port=8081, debug=True)
