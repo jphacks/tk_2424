@@ -2,6 +2,18 @@
 
 ![Logo](/img/image.png)
 
+## 制作者
+岩崎 舞桜, 林 尚史, 廣瀬 万響, 福永 大
+
+## 受賞
+### Hack Day (東京B会場)
+- 企業賞2つ受賞 (三菱重工業様, ノキア様)
+- [Award Day進出](https://jphacks.com/information/award-finalists2024/) (約100チーム中上位16チーム)
+
+### Award Day
+- [企業賞2つ受賞](https://jphacks.com/2024/result/company/) (さくらインターネット様, KDDI総合研究所様)
+- オーディエンス投票3位
+
 ## 製品概要
 
 ### 背景
