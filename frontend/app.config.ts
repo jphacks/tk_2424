@@ -5,6 +5,7 @@ export default ({ config }: ConfigContext): ExpoConfig => {
     ...config,
     slug: process.env.EXPO_PUBLIC_SLUG ?? '',
     name: process.env.EXPO_PUBLIC_NAME ?? '',
+    runtimeVersion: '1.0.0',
     ios: {
       ...config.ios,
       bundleIdentifier: process.env.EXPO_PUBLIC_IOS_BUNDLE_IDENTIFIER,

@@ -17,9 +17,15 @@
     "newArchEnabled": true,
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "このアプリでは写真ライブラリへのアクセスが必要です。",
+        "NSCameraUsageDescription": "このアプリではカメラへのアクセスが必要です。",
+        "NSPhotoLibraryAddUsageDescription": "このアプリでは写真を保存するためのアクセスが必要です。"
+      }
     },
     "android": {
+      "permissions": ["CAMERA", "READ_EXTERNAL_STORAGE", "WRITE_EXTERNAL_STORAGE"],
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo.png",
         "backgroundColor": "#ffffff"
